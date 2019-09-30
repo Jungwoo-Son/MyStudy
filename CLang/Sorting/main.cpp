@@ -1,25 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Queue.h"
-#include "Heap.h"
 
 #define SIZE 10
 
-void initArray(int* arr);
-void shortingFunc(int* arr, void (*Func)(int* ), const char* name);
+void initArray(int *arr);
+void shortingFunc(int* arr, void (*Func)(int* arr), const char *name);
 
-void printArr(int* arr);
 
 void SelectSort(int* arr);
 void BubbleSort(int* arr);
 void InsertSort(int* arr);
-void RadixSort(int* arr);
-void MergeSort(int* arr);
-void QuickSort(int* arr);
-void HeapSort(int* arr);
 
+
+void MergeSort(int* arr);
 void MergeSort_(int* arr, int* tarr, int size);
-void QuickSort_(int* arr, int size);
+
+
 
 int main() {
 	int cm[SIZE] = { 170, 155, 168, 162, 158, 172, 178, 160, 153, 164 };
@@ -27,10 +23,8 @@ int main() {
 	shortingFunc(cm, SelectSort, "선택 정렬");
 	shortingFunc(cm, BubbleSort, "버블 정렬");
 	shortingFunc(cm, InsertSort, "삽입 정렬");
-	shortingFunc(cm, RadixSort, "기수 정렬");
+
 	shortingFunc(cm, MergeSort, "병합 정렬");
-	shortingFunc(cm, QuickSort, "퀵  정렬");
-	shortingFunc(cm, HeapSort, "힙  정렬");
 
 
 
@@ -68,6 +62,8 @@ void shortingFunc(int* arr, void (*Func)(int*), const char* name) {
 		printf("%5d", arr[i]);
 	}printf("\n");
 }
+
+
 
 void SelectSort(int* arr) {
 	int i, j;
@@ -117,7 +113,7 @@ void InsertSort(int* arr) {
 				arr[j - 1] = arr[j];
 				arr[j] = temp;
 			}
-			else
+			else 
 				break;
 		}
 
@@ -125,56 +121,28 @@ void InsertSort(int* arr) {
 
 }
 
-void RadixSort(int* arr){
-	Queue queue[10];
-	int i,j, k, data;
-	int dec = 10;
-
-	for (i = 0; i < 10; i++)
-		Queueinit(queue + i);
-
-
-	for (i = 0; i < 3; i++) {
-		for (j = 0; j < SIZE; j++) {
-			enque(queue + (arr[j] % dec *10 / dec), arr[j]);
-		}
-		
-		k = 0;
-		for (j = 0; j < 10; j++) {
-			for (; deque(queue + j, &data); k++) {
-				arr[k] = data;
-			}
-
-		}
-
-		dec *= 10;
-	}
-	
-
-}
-
 void MergeSort(int* arr) {
 	int tarr[SIZE];//두 그룹을 합칠때 사용할 임시 배열
-	MergeSort_(arr, tarr, SIZE);
+	MergeSort_(arr, tarr ,SIZE);
 }
-void MergeSort_(int* arr, int* tarr, int size) {//재귀적으로 병합 정렬을 실행할 함수
+void MergeSort_(int* arr, int *tarr, int size) {//재귀적으로 병합 정렬을 실행할 함수
 	int secondS;//두번째 그룹의 시작점
 	int i, j;
 	int cur;
-
-	if (size <= 1)
+	
+	if (size <= 1) 
 		return;
 
 	secondS = (size / 2);
 
 	MergeSort_(arr, tarr, size / 2);
-	MergeSort_(arr + size / 2, tarr, size - secondS);
+	MergeSort_(arr + size / 2, tarr, size-secondS);
 
 	i = 0; j = secondS;
 	cur = 0;
 
 
-	while (i < secondS && j < size) {
+	while(i < secondS && j < size) {
 		if (arr[i] > arr[j]) {
 			tarr[cur] = arr[j];
 			j++;
@@ -201,57 +169,4 @@ void MergeSort_(int* arr, int* tarr, int size) {//재귀적으로 병합 정렬을 실행할 
 
 
 
-}
-
-
-void QuickSort(int* arr) {
-	QuickSort_(arr, SIZE);
-}
-void QuickSort_(int* arr, int size) {
-	int temp;
-	int pivot = 0;
-	int comp = size-1;
-	int compVec = -1; //-1 : 뒤에서 앞으로   1 : 앞에서 뒤로
-
-	if (size < 2)
-		return;
-
-	while (pivot != comp) {
-		if (arr[pivot] > arr[comp] && pivot < comp || arr[pivot] < arr[comp] && pivot > comp) {
-			temp = arr[pivot];
-			arr[pivot] = arr[comp];
-			arr[comp] = temp;
-
-			temp = pivot;
-			pivot = comp;
-			comp = temp;
-
-			compVec *= -1;
-		}
-		comp += compVec;
-
-	}
-
-
-	QuickSort_(arr, pivot);
-	QuickSort_(arr + pivot + 1, size - comp - 1);
-}
-
-void HeapSort(int* arr) {
-	int i, data;
-	Heap heap;
-
-	HeapInit(&heap, SIZE);
-
-	for (i = 0; i < SIZE; i++) {
-		heapInsert(&heap, arr[i]);
-	}
-
-
-	for (i = 0; i < SIZE; i++) {
-		heapDelete(&heap, &data);
-		arr[i] = data;
-	}
-
-	exitHeap(&heap);
 }
